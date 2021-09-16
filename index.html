@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>encurtador</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    </head>
+
+    <body class="bg-light">
+        
+
+        <!-- Begin page content -->
+        <main role="main" class="container mx-auto col-md-6 col-sx-12 text-center bg-light text-dark rounded-lg shadow-lg">
+            
+            <div class="mx-5">
+                <h4 class="mt-5 pt-3" id="demo">Encurtador...</h4>
+
+                <div class="input-group input-group-lg mt-5">
+                    <input type="text" class="form-control" id="url_base" placeholder="Cole o link aqui">
+                </div>
+                <div class="input-group input-group-lg mt-3">
+                    <input type="text" placeholder="insira uma palavra aqui" id="id_url" class="form-control">
+                </div>
+                <button class="btn btn-outline-success btn-lg mt-5" type="button" id="encurtar">Encurtar</button>
+
+                <div class="alert-success mx-auto mt-5 rounded col-md-6 col-sx-12" id="resultado_ok"></div>
+                <div class="alert-danger mx-auto mt-5 rounded col-md-6 col-sx-12" id="resultado_erro"></div>
+            </div>
+
+            <div class="pt-5 pb-2">
+                <p class="text-muted">Criado por <a href="https://github.com/erickythierry">Thierry</a></p>
+            </div>
+            
+        </main>
+        <script>
+            
+            document.getElementById("encurtar").onclick = function() {encurtar()};
+
+            function encurtar() {
+                url_base = document.getElementById('url_base').value
+                id_url = document.getElementById('id_url').value
+
+                if(url_base.length>3 && id_url.length>2){
+                    
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+                    var raw = JSON.stringify({
+                    "url": {
+                        "url_base": url_base,
+                        "id_url_curta": id_url
+                    }
+                    });
+
+                    var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                    };
+
+                    fetch("/insert", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.sucess==true){
+                            console.log(result)
+                            document.getElementById("resultado_ok").innerHTML = `<a href="${result.result}">${result.result}</a>`
+                        }else{
+                            document.getElementById("resultado_erro").innerHTML = result.result
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.log('error', error)
+                        document.getElementById("resultado_erro").innerHTML = "erro desconhecido"
+                    });
+
+                }else{
+                    document.getElementById("resultado_erro").innerHTML = "complete todos os campos!"
+                }
+
+                
+
+
+
+            }
+        </script>
+        
+    </body>
+</html>
