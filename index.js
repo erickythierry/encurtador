@@ -4,12 +4,7 @@ const app = express();
 const path = require('path')
 const getRandom = (ext) => {return `${Math.floor(Math.random() * 10000)}${ext}`}
 const myhost = (req) => {
-    if (req.headers.host.includes('xn--g-ufa.ga')){
-        return `https://gá.ga`
-    }else{
-        return `http://${req.headers.host}`
-    }
-    
+    return `http://${req.headers.host}` 
 }
 const porta = process.env.PORT || 3000
 
